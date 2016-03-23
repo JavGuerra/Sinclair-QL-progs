@@ -1,0 +1,426 @@
+100  REMark ************************************************************
+110  REMark **                                                        ** =
+120  REMark ** Q L E T R I S por Fco. Javier Guerra  Badajoz, Sept.91 ** =
+130  REMark **                                                        ** =
+140  REMark ************************************************************ =
+150  REMark   ============================================================
+160  :
+170  :
+180  REMark PREPARACION
+190  :
+200  MODE 8 : RESTORE 
+210  record=10000 : son%=1 : sonar%=0 : xpan%=26 : ypan%=9 : completa%=0
+220  camp$="PROG. " : letra$="" : DIM nomb%(31)
+230  DIM pos%(6,3,7), pant$(23,11), logo%(23,3), inic$(7,5), punt(7)
+240  DIM cl%(9), cn%(15), nota%(41), mus%(65) : pant$(23)=FILL$("0",12)
+250  FOR bu =  0 TO  9 : letra$=letra$&bu
+260  FOR bu = 65 TO 90 : letra$=letra$&CHR$(bu)
+270  letra$=letra$&"©¨!*-"&'"'&"'. ¼Fin"
+280  FOR bu = 0 TO 7 : READ inic$(bu), punt(bu)
+290  FOR fi = 0 TO 6
+300    FOR post = 0 TO 3
+310      FOR co = 0 TO 7 STEP 2
+320        READ pos%(fi,post,co), pos%(fi,post,co+1)
+330        END FOR co
+340      END FOR post
+350    END FOR fi
+360  FOR bu = 0 TO 31 : READ nomb%(bu)
+370  FOR bu = 0 TO  9 : READ cl%(bu)
+380  FOR bu = 0 TO 15 : READ cn%(bu)
+390  FOR bu = 0 TO 41 : READ nota%(bu)
+400  FOR bu1 = 0 TO 23
+410    FOR bu2 = 0 TO 3
+420      READ logo%(bu1,bu2)
+430      END FOR bu2
+440    END FOR bu1
+450  FOR bu = 0 TO 65 STEP 2
+460    READ mus%(bu), mus%(bu+1)
+470    END FOR bu
+480  :
+490  :
+500  REMark PROGRAMA
+510  :
+520  REPeat qletris
+530    WINDOW 512,256,0,0 : PAPER 0 : CLS
+540    INK 7 : logotipo : conect%=0 : cnn%=1 : cll%=1
+550    FOR loop = 0 TO 23
+560      x%=logo%(loop,2)+1 : y%=logo%(loop,3)-4
+570      fi%=logo%(loop,0)  : post%=logo%(loop,1)
+580      PINTAR 0,1 : IF son% : BEEP 1000,RND(25 TO 75)
+590      END FOR loop
+600    INK 4 : conect%=1 : po%=0
+610    FOR bu = 7 TO 31
+620      STRIP 0 : AT 12,9+(bu-7)   : PRINT CHR$(nomb%(bu)+1)
+630      STRIP 2 : AT 12,9+(bu-7)+1 : PRINT " "
+640      END FOR bu
+650    STRIP 0 : AT 12,34 : PRINT " "
+660    texto_1 : texto_2
+670    REPeat loop
+680      REPeat pulsa
+690        a$=INKEY$ : sintonia
+700        IF a$<>"" THEN EXIT pulsa
+710        END REPeat pulsa
+720      IF a$=="I" : informacion : texto_1
+730      IF a$=="S" : son%=1-son% : texto_2 : po%=0
+740      IF a$= "1" : nivel%=1 : ni%=18 : EXIT loop
+750      IF a$= "2" : nivel%=2 : ni%=12 : EXIT loop
+760      IF a$= "3" : nivel%=3 : ni%= 6 : EXIT loop
+770      END REPeat loop
+780    puntos= 0 : pantalla%=1 : lineas%=9
+790    conect%=0 : scr : conect%=1
+800    prox%=RND(0 TO 6)
+810    :
+820    REPeat vuelta
+830      IF completa%
+840        pantalla%=pantalla%+1 : persiana : completa%=0
+850        lineas%=pantalla%*3+6
+860        END IF 
+870      fi%=prox% : post%=0 : x%=2 : y%=-4 : PINTAR 0,0
+880      x%=-1 : y%=5
+890      IF libre%(0)
+900        x%=x%-1
+910        IF libre%(0)
+920          EXIT vuelta
+930          ELSE 
+940          PINTAR 0,1
+950          puntos=puntos+(libre%(1)*(fi%+1)*10)
+960          res_marc : EXIT vuelta
+970          END IF 
+980        END IF 
+990      PINTAR 0,1
+1000     prox%=RND(0 TO 6) : alm%=fi% : fi%=prox%
+1010     x%= 2 : y%=-4 : PINTAR 0,1 : fi%=alm% : post%=0
+1020     x%=-1 : y%= 5 : borrar%=8  : comp%=1  : n_c%=0 : m%=0
+1030     niv%=ni%-pantalla%*3 : IF niv%<1:niv%=1
+1040     :
+1050     REPeat caida
+1060       IF NOT m%=3
+1070         FOR loop = 0 TO niv%
+1080           m%=pulsada% : musica
+1090           IF m%=3 : m%=0 : EXIT loop
+1100           IF m%=5
+1110             STRIP 0 : INK 4 : FLASH 1
+1120             AT 0, 9 : PRINT "*PAUSA*" : PAUSE
+1130             sonar%=0: cnn%=1 : cll%=1
+1140             FLASH 0 : AT 0,9 : PRINT FILL$(" ",7)
+1150             END IF 
+1160           IF m%=4
+1170               m%=0
+1180               post%=post%+1 : ajuste
+1190             IF libre%(0)
+1200               post%=post%-1 : ajuste
+1210               ELSE 
+1220               post%=post%-1 : ajuste : PINTAR 0,0
+1230               post%=post%+1 : ajuste : PINTAR 0,1
+1240               loop=loop+3 : IF loop>niv% :loop=niv%
+1250               END IF 
+1260             END IF 
+1270           END FOR loop
+1280         ELSE m%=0
+1290         END IF 
+1300       IF ABS(m%)=1
+1310         lado%=libre%(comp%)
+1320         IF NOT libre%(comp_direc%)
+1330           bajo%=libre%(1)
+1340           IF NOT bajo% OR bajo% AND NOT lado%
+1350             borrar%=borr_direc% : y%=y%+m% : n_c%=1
+1360             END IF 
+1370           ELSE 
+1380           IF NOT lado%
+1390             y%=y%+m%  : PINTAR borrar%,0 : PINTAR 0,1 : comp%=1
+1400             ELSE 
+1410             borrar%=8 : comp%=1
+1420             END IF 
+1430           END IF 
+1440         END IF 
+1450       IF m%=2
+1460         IF NOT libre%(comp%)
+1470           PINTAR 0,0
+1480           REPeat soltar
+1490             musica : x%=x%+1
+1500             IF libre%(comp%) : EXIT soltar
+1510             END REPeat soltar
+1520           PINTAR 0,1
+1530           END IF 
+1540         END IF 
+1550       IF NOT n_c%
+1560         comprob%=libre%(comp%)
+1570         IF comprob%
+1580           puntos=puntos+(comprob%*(fi%+1)*10)
+1590           res_marc : fijar : qlineas
+1600           EXIT caida
+1610           END IF 
+1620         ELSE 
+1630         n_c%=0
+1640         END IF 
+1650       x%=x%+1 : PINTAR borrar%,0 : PINTAR 0,1
+1660       END REPeat caida
+1670     END REPeat vuelta
+1680   :
+1690   REMark final
+1700   OVER -1 : BLOCK 237,47,75-20+xpan%,79+5+ypan%,217 : OVER 0
+1710   WINDOW 240,50,xpan%+75,ypan%+79
+1720   PAPER 2 : CLS : INK 7 : BORDER 5
+1730   PRINT : PRINT "    JUEGO" : CSIZE 0,0 : PRINT "    FINALIZADO"
+1740   BORDER 3,7 : BORDER 2,2 : BORDER
+1750   FOR bu = 1 TO 1500 : END FOR bu : PAUSE 100
+1760   :
+1770   REMark entrada del nombre
+1780   :
+1790   REMark tabla de maximas puntuaciones
+1800   :
+1810   END REPeat qletris
+1820 :
+1830 :
+1840 REMark PROCESOS Y FUNCIONES
+1850 :
+1860 DEFine PROCedure logotipo
+1870   REMark Logo Sinclair Ql por Fco. J. Guerra G.'87
+1880   LINE 19,90 TO 14,90 TO 14,89 TO 19,89 TO 19,88 TO 13.5,88
+1890   LINE 21,90 TO 21,87.5 : POINT 21,91
+1900   LINE 22.5,88 TO 22.5,90 TO 27.5,90 TO 27.5,87.5
+1910   LINE 33,90 TO 29,90 TO 29,88 TO 33.5,88
+1920   LINE 35,91 TO 35,87.5
+1930   LINE 36.5,90 TO 41.5,90 TO 41.5,88 TO 36.5,88 TO 36.5,89 TO 41.5,89
+1940   LINE 43,90 TO 43,87.5 : POINT 43,91
+1950   LINE 49.5,90 TO 44.5,90 TO 44.5,87.5
+1960   CIRCLE 56,92,4 : LINE 57,90 TO 59,87
+1970   LINE 61.5,95.5 TO 61.5,88 TO 68,88
+1980   END DEFine 
+1990 :
+2000 DEFine PROCedure texto_1
+2010   INK 7 : AT 15,15 : PRINT "Seleccione:" : INK 6
+2020   AT 17,13 : PRINT "1  Nivel inicial"
+2030   AT 19,13 : PRINT "2  Nivel medio"
+2040   AT 21,13 : PRINT "3  Nivel avanzado"
+2050   END DEFine 
+2060 :
+2070 DEFine PROCedure texto_2
+2080   IF son%
+2090     modo$="CONECTADO "
+2100     ELSE 
+2110     modo$="DESCONECT." : BEEP
+2120     END IF 
+2130   INK 5 : AT 24,5 : PRINT "(S)ONIDO ";modo$;" (I)NFORMACION"
+2140   END DEFine 
+2150 :
+2160 DEFine PROCedure informacion
+2170   FOR bu = 15 TO 21 STEP 2 : AT bu,13 : PRINT FILL$(" ",17):sintonia
+2180   INK 4 : AT 14,10 : PRINT "(924) 25 91 37 - ESPA©A"
+2190   INK 7 : AT 17,13 : PRINT "TECLAS DEL JUEGO:" : INK 6
+2200   AT 19,8 : PRINT "[¼] IZQUIERDA   [½] DERECHA"
+2210   AT 20,8 : PRINT "[¾] VELOCIDAD   [¿] SOLTAR"
+2220   AT 21,8 : PRINT "[ESPACIO] GIRAR [P] PAUSA"
+2230   REPeat sal : IF KEYROW(5)<>4 : EXIT sal : END IF : sintonia
+2240   AT 14,10 : PRINT FILL$(" ",23) : AT 17,13 : PRINT FILL$(" ",17)
+2250   sonar%=0
+2260   FOR bu = 19 TO 21 : AT bu,8 : PRINT FILL$(" ",28) : sintonia
+2270   END DEFine 
+2280 :
+2290 DEFine PROCedure scr
+2300   PAPER 0 : CLS : POKE 98403,2 : REMark desconectar pantalla
+2310   WINDOW 478,254,xpan%-11,ypan%-7 : BORDER 7,7,0,3 : BORDER
+2320   WINDOW 455,240,xpan%,ypan%
+2330   PAPER 5,1,1 : CLS : BORDER 2,7 : BORDER
+2340   WINDOW 192,230,xpan%+101,ypan% : PAPER 0 : CLS
+2350   BORDER 8,7,0,3 : BORDER 2,7 : BORDER : CSIZE 1,0
+2360   WINDOW 185,15,xpan%+105,ypan%-7 : PAPER 7,0,3 : CLS
+2370   WINDOW 161,15,xpan%+117,ypan%-7 : PAPER 0 :CLS
+2380   WINDOW 129,148,xpan%+309,ypan%+28
+2390   PAPER 1,0,3 : CLS  : BORDER 2,0 : BORDER 1,7 : BORDER
+2400   WINDOW 450,251,xpan%+5,ypan%-8
+2410   AT 9,0 : CSIZE 3,1 : OVER 1
+2420   FOR bu = 0 TO 6
+2430     INK bu : PRINT "  ";CHR$(nomb%(bu)+1);
+2440     INK 0  : PRINT CHR$(nomb%(bu)+1)
+2450     END FOR bu
+2460   CSIZE 1,0 : INK 2
+2470   OVER 0 : STRIP 1,7,3
+2480   FOR bu = 19 TO 23 : AT bu,19 : PRINT "        "
+2490   STRIP 7,1,1 : AT 2,0 : PRINT "      " : OVER 1
+2500   AT 2, 1 : PRINT "PROX." : AT  5,20 : PRINT "FALTAN"
+2510   AT 9,21 : PRINT "PANT." : AT 14,20 : PRINT "PUNTOS"
+2520   OVER 0  : STRIP 3 : INK 7 : AT 20,20 : PRINT "MAXIMA"
+2530   STRIP 3,7,3 : INK 1 : AT 21,20 : PRINT camp$
+2540   STRIP 5 : INK 1 : AT 2,19 : PRINT " NIVEL  " : PAPER 0
+2550   FOR bu=3 TO 6 : AT bu,0 : PRINT "      "
+2560   persiana : INK 7 : res_marc : POKE 98403,8 : REMark conect. pant.
+2570   END DEFine 
+2580 :
+2590 DEFine PROCedure musica
+2600   IF BEEPING AND sonar% :sonar%=0
+2610   IF NOT BEEPING AND NOT sonar%
+2620     IF son% AND conect%
+2630       BEEP 7500, nota%(cn%(cnn%)+cl%(cll%)-12) : sonar%=1
+2640       END IF 
+2650     IF cll%= 9 : cll%=0
+2660     IF cnn%=15 : cnn%=0 : cll%=cll%+1
+2670     cnn%=cnn%+1
+2680     END IF 
+2690   END DEFine 
+2700 :
+2710 DEFine PROCedure sintonia
+2720   IF BEEPING AND sonar% : sonar%=0
+2730   IF NOT BEEPING AND NOT sonar%
+2740     IF son% : BEEP mus%(po%+1)*10000,mus%(po%) : sonar%=1
+2750     IF po%=64 : po%=0 : ELSE po%=po%+2 : END IF 
+2760     END IF 
+2770   END DEFine 
+2780 :
+2790 DEFine PROCedure persiana
+2800   FOR bu = 0 TO 22
+2810     pant$(bu)="0"&FILL$("1",10)&"0"
+2820     IF son% AND conect% : BEEP 1000,250-bu*10
+2830     IF conect%
+2840       BLOCK 160,9,112,bu*10,7
+2850       BLOCK 158,8,114,bu*10+2,1
+2860       BLOCK 157,7,114,bu*10+2,6
+2870       END IF 
+2880     END FOR bu
+2890   IF conect% : PAUSE 150
+2900   IF conect% : FOR bu = 22 TO 0 STEP -1 : BLOCK 161,10,112,bu*10,0
+2910   pantalla%=pantalla%+1 : cnn%=1 : cll%=1
+2920   END DEFine 
+2930 :
+2940 DEFine PROCedure qlineas
+2950   arb%=pos%(fi%,post%,0) : arb%=x%+arb%
+2960   baj%=pos%(fi%,post%,6) : baj%=x%+baj%
+2970   REPeat comprobar
+2980     IF "1" INSTR pant$(baj%)(2 TO 11)=0
+2990       PAPER 0 : AT baj%,7 : PRINT FILL$(" ",10)
+3000       FOR bu = baj% TO 1 STEP -1 : pant$(bu)=pant$(bu-1)
+3010       pant$(0)(2 TO 11)=FILL$("1",10)
+3020       WINDOW 161,10*(baj%+1),xpan%+117,ypan%-8
+3030       IF son% : BEEP : BEEP 5000,142 : END IF : SCROLL 10
+3040       IF son%
+3050         REPeat s : IF NOT BEEPING : BEEP 1000,28 : EXIT s
+3060         END IF 
+3070       WINDOW 450,251,xpan%+5,ypan%-8
+3080       arb%=arb%+1 : lineas%=lineas%-1 : IF lineas%=0 : completa%=1
+3090       puntos=puntos+150 : res_marc
+3100       ELSE 
+3110       baj%=baj%-1
+3120       END IF 
+3130     IF baj%<arb% OR completa% : EXIT comprobar
+3140     END REPeat comprobar
+3150   END DEFine 
+3160 :
+3170 DEFine PROCedure marc(num%,x%,y%,lon%)
+3180   n%=LEN(num%)
+3190   IF n%<lon% : t$=FILL$(" ",lon%-n%)&num% : ELSE t$=num% : END IF 
+3200   musica : AT x%,y% : PRINT t$
+3210   END DEFine 
+3220 :
+3230 DEFine PROCedure res_marc
+3240   INK 7 : STRIP 1,0,3
+3250   marc lineas%,7,22,2 : marc pantalla%,11,22,2
+3260   marc puntos,16,20,6 : INK 0   : PAPER 7
+3270   marc record,22,20,6 : AT 2,25 : PRINT nivel%
+3280   END DEFine 
+3290 :
+3300 DEFine FuNction libre%(num%)
+3310   val%=0 : posicion num%
+3320   FOR bu = 0 TO 7 STEP 2
+3330     pox%=pos%(fi%,post%,bu) : poy%=pos%(fi%,post%,bu+1) : musica
+3340     IF pant$(x%+pox%+sux%)(y%+poy%+suy%)=0 : val%=val%+1
+3350     END FOR bu
+3360   RETurn val%
+3370   END DEFine 
+3380 :
+3390 DEFine FuNction pulsada%
+3400   mov%=0 : borrar%=8 : comp%=1
+3410   IF KEYROW(1)= 16
+3420     comp%=3 : comp_direc%=5 : borrar%=2 : borr_direc%=6 :mov%= 1
+3430     END IF 
+3440   IF KEYROW(1)=  2
+3450     comp%=2 : comp_direc%=4 : borrar%=3 : borr_direc%=7 :mov%=-1
+3460     END IF 
+3470   IF KEYROW(1)=128 THEN mov%=2
+3480   IF KEYROW(1)=  4 THEN mov%=3
+3490   IF KEYROW(1)= 64 THEN mov%=4
+3500   IF KEYROW(4)= 32 THEN mov%=5
+3510   RETurn mov%
+3520   END DEFine 
+3530 :
+3540 DEFine PROCedure PINTAR(num%,col%)
+3550   posicion num%
+3560   IF col%=0 : color%=0 : ELSE color%=fi%+1 : END IF 
+3570   STRIP color%
+3580   FOR bu = 0 TO 7 STEP 2
+3590     pox%=pos%(fi%,post%,bu) : poy%=pos%(fi%,post%,bu+1)
+3600     musica : AT x%+pox%+sux%,5+y%+poy%+suy% : PRINT " "
+3610     END FOR bu
+3620   END DEFine 
+3630 :
+3640 DEFine PROCedure fijar
+3650   FOR bu = 0 TO 7 STEP 2
+3660     pox%=pos%(fi%,post%,bu) : poy%=pos%(fi%,post%,bu+1)
+3670     pant$(x%+pox%)(y%+poy%)=0
+3680     END FOR bu
+3690   END DEFine 
+3700 :
+3710 DEFine PROCedure ajuste
+3720   IF post%=-1 THEN post%=3
+3730   IF post%= 4 THEN post%=0
+3740   END DEFine 
+3750 :
+3760 DEFine PROCedure posicion(nume%)
+3770   numero=nume%
+3780   SELect ON numero
+3790     =1 : sux%= 1 : suy%= 0
+3800     =2 : sux%= 0 : suy%=-1
+3810     =3 : sux%= 0 : suy%= 1
+3820     =4 : sux%= 1 : suy%=-1
+3830     =5 : sux%= 1 : suy%= 1
+3840     =6 : sux%=-1 : suy%=-1
+3850     =7 : sux%=-1 : suy%= 1
+3860     =8 : sux%=-1 : suy%= 0
+3870     =REMAINDER 
+3880          sux%= 0 : suy%= 0
+3890     END SELect 
+3900   END DEFine 
+3910 :
+3920 :
+3930 REMark DATOS
+3940 :
+3950 REMark Tablas
+3960 DATA " PROG ",100000,"C.P.U.",90000,"M68008",85000," QDOS ",80000
+3970 DATA " CHIP ", 70000,"SBasic",65000,"SCLIVE",60000," JAVI ",50000
+3980 :
+3990 REMark Figuras
+4000 DATA 2,1,2,2,3,1,3,2,2,1,2,2,3,1,3,2,2,1,2,2,3,1,3,2,2,1,2,2,3,1,3,2
+4010 DATA 2,0,2,1,2,2,2,3,1,2,2,2,3,2,4,2,2,0,2,1,2,2,2,3,1,2,2,2,3,2,4,2
+4020 DATA 2,1,2,2,2,3,3,1,1,2,2,2,3,2,3,3,1,3,2,1,2,2,2,3,1,1,1,2,2,2,3,2
+4030 DATA 2,1,2,2,2,3,3,2,1,2,2,2,2,3,3,2,1,2,2,1,2,2,2,3,1,2,2,2,2,1,3,2
+4040 DATA 2,2,2,3,3,1,3,2,2,1,3,1,3,2,4,2,2,2,2,3,3,1,3,2,2,1,3,1,3,2,4,2
+4050 DATA 2,1,2,2,3,2,3,3,2,3,3,2,3,3,4,2,2,1,2,2,3,2,3,3,2,3,3,2,3,3,4,2
+4060 DATA 2,1,2,2,2,3,3,3,1,2,1,3,2,2,3,2,1,1,2,1,2,2,2,3,1,2,2,2,3,2,3,1
+4070 :
+4080 REMark Datos Personales
+4090 DATA 80,75,68,83,81,72,82,79,78,81,31
+4100 DATA 69,98,110,45,31,73,64,85,72,68,81,31,70,84,68,81,81,64,31,70,45
+4110 :
+4120 REMark notas del tubular_bells
+4130 DATA 0,0,0,0,2,2,0,0,-7,-7
+4140 DATA 23,23,23,23,28,30,35,35,35,33,30,28,32,33,26,25
+4150 DATA 210,199,187,178,170,160,151
+4160 DATA 142,134,126,115,109,104,97,91
+4170 DATA 86,81,76,71,66,62,58,53,49,46
+4180 DATA 43,40,37,34,32,30,28,26,24,21
+4190 DATA 19,18,16,15,13,12,11
+4200 :
+4210 REMark QLETRIS
+4220 DATA 4,0,3,3,1,1,5,1,6,0,8,3,1,1,5,5
+4230 DATA 2,3,4,8,6,2,7,9
+4240 DATA 6,0,3,13,3,1,5,11,2,2,7,13
+4250 DATA 6,0,3,17,2,0,3,20,6,3,6,18,2,1,6,19
+4260 DATA 2,0,3,24,6,1,6,23,6,3,4,26,5,0,6,25
+4270 DATA 2,3,4,29,3,2,7,29
+4280 DATA 2,0,3,33,6,2,6,33,1,1,7,35,6,2,9,33
+4290 DATA 0,0,0,29
+4300 :
+4310 REMark El puente sobre el rio ...
+4320 DATA 40,.5,50,2,50,.5,46,.5,40,.5,20,1,20,1,28,2
+4330 DATA 40,.5,50,2,50,.5,46,.5,50,.5,40,1,40,1,46,2
+4340 DATA 46,.5,57,2,57,.5,50,.5,46,.5,40,.5,50,2
+4350 DATA 50,.5,46,.5,50,.5,57,.5,35,1,35,.5,30,.5,40,1,40,.5,28,3

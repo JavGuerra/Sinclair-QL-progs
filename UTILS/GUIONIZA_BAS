@@ -1,0 +1,42 @@
+100 n=4:MODE 4:CSIZE 2,1:INK 0,n,1:PAPER 0:CLS:CLS#0:PRINT "*** GUIONIZACION AUTOMATICA ***"
+105 CSIZE 1,0:INK n
+110 PRINT:PRINT"      No controla diptongos ni triptongos."
+120 PRINT"      No guioni'za las si'labas -sub- y -des-"
+125 CSIZE 0,1:INK 0,n,1
+130 PRINT:PRINT "Introduzca una palabra: ";:INK n:INPUT pal$
+140 l=LEN(pal$)-1:vocales$="AEIOUaeioua'e'i'o'u'u{"
+150 REPeat buc
+160 c=0
+170 IF l<=2 THEN EXIT buc
+180 REPeat comp
+190 IF l=1 THEN EXIT buc
+200 IF pal$(l) INSTR vocales$<>0 OR c=3 THEN EXIT comp
+210 IF l>2 THEN 
+220 IF pal$(l-2 TO l)=="SUB" OR pal$(l-2 TO l)=="DES"
+221 IF pal$(l+1) INSTR vocales$<>0 OR pal$(l-2 TO l)=="SUB" AND pal$(l+1) INSTR "lrLR"<>0 THEN l=l-2:c=0:ELSE guion:l=l-2:c=0:END IF 
+230 ELSE 
+235 l=l-1:c=c+1
+240 END IF 
+250 ELSE 
+260 l=l-1:c=c+1
+270 END IF 
+280 END REPeat comp
+290 SELect ON c
+300 =0: l=l-1
+310 =1: guion:l=l-1
+320 =2
+330 IF pal$(l+2)=="L" AND pal$(l+1) INSTR "rsntRSNT"=0 OR pal$(l+2)=="R" AND pal$(l+1) INSTR "lnsLNS"=0 OR pal$(l+2)=="H" AND pal$(l+1) INSTR "sndlxSNDLX"=0 THEN 
+340 guion:l=l-1
+350 ELSE 
+360 l=l+1:guion:l=l-2
+370 END IF 
+380 =3: IF pal$(l+2)=="S" THEN l=l+2:guion:l=l-3:ELSE l=l+1:guion:l=l-2: END IF 
+390 END SELect 
+400 END REPeat buc
+410 IF l=2 :l=l-1:IF pal$(l) INSTR vocales$<>0:guion
+420 INK 0,n,1:PRINT: PRINT"La palabra es: ";:INK n:PRINT pal$
+430 INK 0,n,1:PRINT:PRINT "       ]Desea guionizar de nuevo? (s/n) "
+440 pal$=INKEY$(-1):IF pal$=="S" THEN RUN
+450 DEFine PROCedure guion
+460 pal$=pal$(1 TO l)&"- "&pal$(l+1 TO)
+470 END DEFine guion

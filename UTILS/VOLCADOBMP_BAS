@@ -1,0 +1,36 @@
+100 REMark programa de volcado bmp
+110 REMark Javier Guerra 2004
+120 :
+130 fic$="background" : REMark fichero
+140 dis$="mdv1_"   : REMark unidad
+150 offs=86 : REMark salto cabecera
+160 modo=4 : REMark 8 – 4
+170 c_fi=5 : REMark canal fichero
+180 c_pa=6 : REMark canal pantalla
+190 :
+200 MODE modo
+210 IF modo=8 THEN 
+220     linea=255 : valor=1.475
+230   ELSE 
+240     linea=511 : valor=.7375
+250 END IF 
+260 OPEN #c_pa,scr_512x256a0x0
+270 SCALE #c_pa,255,0,0
+280 PAPER #c_pa,7 : CLS #c_pa
+290 OPEN_IN #c_fi,dis$&fic$&"_bmp"
+300 :
+310 REMark quitando la cabezera
+320 FOR i=1 TO offs : cab$=INKEY$(#c_fi)
+330 :
+340 FOR y=0 TO 255
+350   FOR x=0 TO linea
+360     color=CODE(INKEY$(#c_fi))
+370     INK  #c_pa,color
+380     POINT #c_pa,x*valor,y
+390   END FOR x
+400 END FOR y
+410 CLOSE #c_fi : CLOSE #c_pa
+420 :
+430 PAUSE
+440 REMark SBYTES dis$&fic$&"_scr",131072,16384
+450 PRINT #0,"OK"

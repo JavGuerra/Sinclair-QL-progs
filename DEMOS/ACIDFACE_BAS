@@ -1,0 +1,33 @@
+100 REMark acid_face -2009- badaman
+110 ancho=512: alto=256: ca=5: pa=0
+120 MODE 8: OPEN #ca,scr_
+130 posvx=(512-ancho)/2
+140 posvy=(256-alto)/2
+150 WINDOW#ca,ancho,alto,posvx,posvy
+160 PAPER #ca,pa: CLS #ca
+170 ncaras=RND(5 TO 10)
+180 FOR i=1 TO ncaras
+190   valy=RND(20 TO 255)
+200   valx=X_Scale(valy,ancho,alto)
+210   y=RND(10 TO valy-10)
+220   x=RND(10 TO valx-10)
+230   c=RND(1 TO 7)
+240   SCALE #ca,valy,0,0
+250   acid_face ca,x,y,c
+260 END FOR i
+270 CLOSE #ca
+280 PAUSE: RUN
+290 :
+300 DEFine FuNction X_Scale (y_scale, wide, high)
+310   RETurn .7411765 * y_scale * wide / high
+320 END DEFine X_Scale
+330 :
+340 DEFine PROCedure acid_face (canal, posx, posy, color)
+350   INK #canal,color
+360   CIRCLE #canal,posx,posy,10
+370   FILL #canal,1: ELLIPSE #canal,posx-2.5,posy+2.5,2.5,.4,0: FILL #canal,0
+380   FILL #canal,1: ELLIPSE #canal,posx+2.5,posy+2.5,2.5,.4,0: FILL #canal,0
+390   ARC  #canal,posx-6,posy-2 TO posx+6,posy-2,PI-.5
+400   LINE #canal,posx-5.5,posy-1 TO posx-7,posy-3
+410   LINE #canal,posx+5.5,posy-1 TO posx+7,posy-3
+420 END DEFine acid_face

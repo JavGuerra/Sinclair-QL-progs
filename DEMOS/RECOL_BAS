@@ -1,0 +1,30 @@
+100 MODE 8 : ch=3
+110 OPEN #ch,scr_
+120 axw=400 : ayw=200
+130 WINDOW #ch,512,256,0,0
+140 PAPER #ch,1 : CLS #ch
+150 WINDOW #ch,axw,ayw,INT((512-axw)/2),INT((256-ayw)/2)
+160 PAPER #ch,0 : CLS #ch
+170 INK #ch,7
+180 SCALE #ch,ayw,0,0
+190 axw=INT(X_Scale (ayw,axw,ayw))
+200 r=6 : d=4
+210 x=INT(axw/2)
+220 y=INT(ayw/2)
+230 iz=0: ab=0
+240 ix=1 : iy=1
+250 :
+260 REPeat bucle
+270   RECOL #ch,0,0,1,2,3,4,5,6
+280   FILL #ch,1
+290   CIRCLE #ch,x,y,r
+300   FILL #ch,0
+310   x=x+(d*ix) : y=y+(d*iy)
+320   IF x>axw OR x<0 THEN ix=-ix
+330   IF y>ayw OR y<0 THEN iy=-iy
+340 REMark   PAUSE
+350 END REPeat bucle
+360 :
+370 DEFine FuNction X_Scale (y_scale, wide, high)
+380   RETurn .7411765 * y_scale * wide / high
+390 END DEFine X_Scale

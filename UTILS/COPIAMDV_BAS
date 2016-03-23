@@ -1,0 +1,25 @@
+100 REMark COPIAS DE MICRODRIVE
+110 :
+120 PAPER 2:CLS:CLS#0
+130 BORDER 10
+140 PRINT\"COPIAS"
+150 PRINT\\"Instrucciones"
+160 PRINT\"Introduzca  en la 'mdv1' el micro-drive en el que seran grabados losprogramas."
+170 PRINT\"E introduzca en la 'mdv2' el micro-drive del cual seran sacadas las copias."
+180 PRINT\\"pulse una tecla para copiar"
+190 PAUSE
+200 :
+210 BORDER :PAPER 1:CLS:BORDER 10
+211 PRINT "COPIA"\
+220 OPEN_NEW #3,mdv1_dir
+230 DIR#3,mdv2_
+240 OPEN_IN #3,mdv1_dir
+250 INPUT #3,a$;a$
+260 REPeat cop
+270    IF EOF(#3):EXIT cop
+280    INPUT #3,a$
+290    PRINT "  Copiando...";a$
+300    COPY 'mdv2_'&a$ TO 'mdv1_'&a$
+310 END REPeat cop
+320 CLOSE#3
+330 DELETE mdv1_dir

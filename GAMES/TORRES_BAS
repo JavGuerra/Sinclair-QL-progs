@@ -1,0 +1,187 @@
+100 DEFine PROCedure salvar
+110 DELETE win1_torres
+120 SAVE win1_torres
+130 END DEFine salvar
+140 :
+150 REMark TORRES DE HANOY
+160 REMark JAVIER GUERRA
+170 REMark Para Sinclair QL
+180 REMark Creado en Agosto 1993
+190 REMark Revisado en Mayo 1998
+200 REMark ver. 2.0 mge emu
+210 :
+220 smp=3
+230 :
+240 REMark presnt. e instrucciones **
+250 :
+260 :
+270 REMark ventanas
+280 :
+290 :
+300 MODE 8:PAPER 0,4,0:CLS:STRIP#0,0
+310 BORDER 6,1:BORDER 5,0:BORDER 3,4:BORDER:BORDER#0,0:CLS#0
+320 INK 1:CSIZE 3,1:STRIP 4
+330 AT 3,0:PRINT "           TORRES      "
+340 AT 5,5 :PRINT "     DE HANOY          "
+350 STRIP 0,4,0:INK 6:CSIZE 0,0
+360 AT 2,3:PRINT "v.2 mge"
+370 AT 13,17:PRINT "por:"
+380 STRIP 0:INK 3:AT 15,9:PRINT " Fco. Javier Guerra "
+390 a=0:a$=""
+400 REPeat loop
+410 a=a+1:IF a=8 THEN a=1
+420 INK#0,a
+430 AT#0,1,4:PRINT#0,"Pulse una tecla para comenzar"
+440 FOR cir=1 TO 10
+450 a$=INKEY$
+460 IF a$<>"" THEN EXIT loop
+470 END FOR cir
+480 END REPeat loop
+490 IF a$=="S" THEN instrucciones
+500 :
+510 DEFine PROCedure instrucciones
+520 PAPER 0:BORDER 0:CLS:CLS#0:BORDER 1,4
+530 PRINT:PRINT "            INSTRUCCIONES:"
+540 INK 4:PRINT
+550 PRINT " El juego consiste en construir  una"
+551 PRINT " torre con todas  las anillas que al"
+552 PRINT " comienzo de la partida aparecen re-"
+553 PRINT " partidas entre tres varillas.  Para"
+554 PRINT " conseguir nuestro objetivo  debemos"
+555 PRINT " observar las siguientes normas:"
+556 PRINT
+558 PRINT " 1.- Nunca coloque una anilla mayor       sobre otra mŒs peque‰a.          2.- Para mover una anilla seleccio-      ne las letras que correspondan       a las varillas inicial y final.  3.- El juego termina cuando todas        las anillas se encuentren en         una misma varilla ordenadas de       arriba a abajo de menor a mayor"
+560 INK#0,3:AT#0,1,5:PRINT#0,"Pulse una tecla para volver..."
+570 PAUSE
+580 END DEFine 
+590 DEFine PROCedure pre_pan
+600 PAPER 1,0,1:CLS:CLS#0
+601 BORDER 6,5:BORDER 5,7:BORDER 4,5:BORDER 3,0:BORDER 2,7:BORDER 1,1
+602 BORDER 6:INK 5
+610 AT 5,7:PRINT "A":AT 5,17:PRINT "B":AT 5,27:PRINT "C"
+620 STRIP 2,0
+630 FOR bu=7 TO 14:AT bu,7:PRINT " ":AT bu,17:PRINT " ":AT bu,27:PRINT" "
+640 AT 15,2:PRINT FILL$(" ",31)
+650 STRIP 1,0,1
+660 END DEFine pre_pan
+670 DEFine PROCedure p_menu
+680 PAPER 0,3,3:CLS:CLS#0
+681 BORDER 6,5:BORDER 5,7:BORDER 4,5:BORDER 3,0:BORDER 2,7:BORDER 1,1
+682 BORDER 6:INK#0,5
+690 INK#0,5:AT#0,1,3:PRINT#0,"Seleccione una opci–n"
+700 STRIP 2:INK 7: AT 1,3:PRINT " TORRES DE HANOY v.2 mge "
+710 STRIP 0:INK 5:AT 2,6:PRINT " Por: Fco. Javier Guerra "
+720 STRIP 0,3,3:INK 6:AT 4,2:PRINT "Opciones:":INK 7
+730 INK 5:AT  8,3:PRINT "1";:INK 6:PRINT " -";:INK 7:PRINT " Principiante"
+740 INK 5:AT  9,3:PRINT "2";:INK 6:PRINT " -";:INK 7:PRINT " BŒsico"
+750 INK 5:AT 10,3:PRINT "3";:INK 6:PRINT " -";:INK 7:PRINT " Normal"
+760 INK 5:AT 11,3:PRINT "4";:INK 6:PRINT " -";:INK 7:PRINT " Bueno"
+770 INK 5:AT 12,3:PRINT "5";:INK 6:PRINT " -";:INK 7:PRINT " Muy Bueno"
+780 INK 5:AT  6,2:PRINT "[I]";:INK 6:PRINT "=";:INK 7:PRINT "Instrucciones"
+790 INK 5:AT 14,2:PRINT "[J]";:INK 6:PRINT "=";:INK 7:PRINT "Jugar"
+800 INK 5:AT 16,2:PRINT "[ESC]";:INK 6:PRINT "=";:INK 7:PRINT "Salir"
+810 STRIP 3:AT smp+7,2:PRINT " ";smp;:STRIP 0,3,3:PRINT " ½"
+820 END DEFine p_menu
+830 p_menu: n$=3
+840 REPeat loop
+850 a$=INKEY$
+860 IF CODE(a$)>48 AND CODE(a$)<54 THEN 
+870   STRIP 0,3,3:INK 5:AT smp+7,2:PRINT " ";smp;:INK 6:PRINT " -"
+880   smp=CODE(a$)-48
+890   STRIP 3:INK 7:AT smp+7,2:PRINT " ";smp;:STRIP 0,3,3:PRINT " ½"
+900 END IF 
+910 IF a$=CHR$(27) THEN RUN
+920 IF a$=="I" THEN CLS:instrucciones:p_menu
+930 IF a$=="J" THEN EXIT loop
+940 END REPeat loop
+950 n=smp+3
+960 :
+970 :
+980 REMark dibujar figuras aleatoriamente
+990 :
+1000 pre_pan
+1010 DIM palo(2,8)
+1020 FOR bu=n TO 1 STEP -1
+1030 r=RND(0 TO 2)
+1040 palo(r,0)=palo(r,0)+1:palo(r,palo(r,0))=bu
+1050 END FOR bu
+1060 REMark IF final=1 THEN arreglar
+1070 FOR r=0 TO 2
+1080 FOR bu=1 TO palo(r,0)
+1090 pintar r,bu,1
+1100 END FOR bu
+1110 END FOR r
+1120 AT 1,3:PRINT "00:00:00";:INK 7:PRINT"      mov.:      niv.";:INK 6
+1121 AT 1,23:PRINT "0";:AT 1,32:PRINT smp
+1130 INK#0,5:PAPER#0,0
+1131 AT#0,1,0:tex$="   [P]=Pausa [N]=Nueva [ESC]=Salir  ":PRINT#0,tex$
+1140 REMark SDATE 1983,8,28,0,0,0
+1150 DEFine PROCedure pintar(va,nu,ss)
+1160 IF ss<>0 THEN c=8-(palo(va,nu)):ELSE c=73:END IF 
+1170 p=90+va*120
+1180 v=palo(va,nu)*(124/n):BLOCK v,10,(p*2-v)/2,70+10*(8-nu),c
+1190 IF ss=0 THEN STRIP 2,0,3:AT 6+8-nu+1,7+va*10:PRINT " ":STRIP 1,0,1
+1200 END DEFine pintar
+1210 :
+1220 DEFine PROCedure mover(un,dos)
+1230 pintar un,palo(un,0),0
+1240 palo(dos,0)=palo(dos,0)+1
+1250 palo(dos,palo(dos,0))=palo(un,palo(un,0))
+1260 palo(un,palo(un,0))=0
+1270 palo(un,0)=palo(un,0)-1
+1280 pintar dos,palo(dos,0),1
+1290 mo=mo+1
+1300 IF palo(0,0)=n OR palo(1,0)=n OR palo(2,0)=n THEN EXIT JUGAR
+1310 END DEFine mover
+1320 DEFine PROCedure restaurar
+1330 INK 5:AT 5,7+mov(0)*10:PRINT le$(mov(0)+1):INK 6
+1340 mov(0)=0:mov(1)=0:val=0
+1350 END DEFine 
+1360 :
+1370 mo=0:val=0:DIM mov(1)
+1380 le$="ABC"
+1390 REPeat JUGAR
+1400 d$=DATE$:AT 1,3:PRINT d$(13 TO)
+1410 AT 1,23:PRINT mo
+1420 CH$=INKEY$:IF CH$="" THEN CH$=" "
+1430 IF CH$=CHR$(27) THEN RUN
+1440 IF CH$=="N" THEN GO TO 1000
+1450 IF CH$=="P" THEN PAUSE
+1460 mov(val)=CH$ INSTR le$
+1470 IF mov(val)>0 THEN 
+1480   mov(val)=mov(val)-1:val=val+1
+1490 IF val=1
+1500   FLASH 1:AT 5,7+mov(val-1)*10:PRINT le$(mov(val-1)+1):FLASH 0
+1510   IF palo(mov(0),0)=0 THEN 
+1511     INK#0,6:AT#0,1,0:PRINT#0," -- no hay anillas en esa varilla -- "
+1512     BEEP 100,10:PAUSE
+1513     INK#0,5:AT#0,1,0:PRINT#0,tex$:restaurar
+1514   END IF 
+1520   END IF 
+1530 IF val=2
+1540   IF mov(0)<>mov(1)
+1550     IF palo(mov(0),palo(mov(0),0))<palo(mov(1),palo(mov(1),0)) OR palo(mov(1),0)=0 THEN 
+1560    mover mov(0),mov(1):restaurar
+1570       ELSE 
+1580       INK#0,6:AT#0,1,0:PRINT#0,"     ---  movimiento ilegal  ---   "
+1581       BEEP 100,10:PAUSE
+1582       INK#0,5:AT#0,1,0:PRINT#0,tex$
+1590       restaurar
+1600       END IF 
+1610     ELSE 
+1620     restaurar
+1630     END IF 
+1640     END IF 
+1650   END IF 
+1660 END REPeat JUGAR
+1670 :
+1680 restaurar:CLS#0
+1690 FOR bu=1 TO 10:BORDER#0,bu,2
+1700 BORDER#0,4,0:BORDER#0,3,2:BORDER#0,2,0:BORDER#0,10
+1710 INK#0,3:FLASH#0,1:AT#0,0,10:PRINT#0,"FELICITACIONES":FLASH#0,0:PAUSE 100
+1720 INK#0,4:AT#0,1,11:PRINT#0,"´OTRA (S/N)?"
+1730 REPeat fin
+1740 a$=INKEY$
+1750 IF a$<>"" THEN EXIT fin
+1760 END REPeat fin
+1770 IF a$=="S" THEN RUN

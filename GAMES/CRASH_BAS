@@ -1,0 +1,43 @@
+100 REMark crash_bas - 2009 - badaman
+110 MODE 8: CLS: CLS #0
+120 REMark cambia "an" = ancho pista
+130 al=10: an=11: REMark vals. 2 a 28
+140 REMark cambia "nv" = dificultad
+150 nv=3: REMark 1 dific. a 5 facil
+160 h=INT(an/2): ch=h+1: v=al: cv=v
+170 coche$=CHR$(174): otro$=CHR$(183)
+180 lin$=FILL$(" ",an): tp=0: sw=0
+190 DIM camino$(al,an): ca=5
+200 FOR i=0 TO al: camino$(i)=lin$
+210 OPEN #ca,scr_448x220a32x16
+220 PAPER #ca,4: CLS#ca: INK#ca,1
+230 WINDOW #ca,(an+2)*16,(al+1)*20,32+(448-((an+2)*16))/2,16+(220-((al+1)*20))/2
+240 PAPER #ca,4,6,3: CLS #ca
+250 WINDOW #ca,an*16,(al+1)*20,32+(448-(an*16))/2,16+(220-((al+1)*20))/2
+260 PAPER #ca,6: CLS#ca: CSIZE#ca,3,1
+270 REPeat carrera
+280   ov=v:oh=h
+290   IF KEYROW(1)=4 AND v>1 AND cv>1
+300     IF camino$(cv-1,ch)<>" " THEN sw=1: ELSE cv=cv-1: v=v-1
+310   END IF 
+320   IF KEYROW(1)=128 AND v<al THEN cv=cv+1: v=v+1
+330   IF KEYROW(1)=2  AND ch>1  THEN ch=ch-1: h=h-1
+340   IF KEYROW(1)=16 AND ch<an THEN ch=ch+1: h=h+1
+350   cv=cv-1: IF cv<0 THEN cv=al
+360   AT #ca,ov,oh: PRINT #ca," "
+370   SCROLL #ca,20
+380   INK #ca,2: AT #ca,v,h: PRINT #ca,coche$
+390   IF camino$(cv,ch)<>" " OR sw THEN EXIT carrera
+400   REMark PAUSE 5: REMark quita REM para GoldCar
+410   tp=tp-1: IF tp<0 THEN tp=al
+420   camino$(tp)=lin$
+430   n=RND(0 TO nv)
+440   IF NOT n
+450     n=RND(1 TO an)
+460     INK #ca,1: AT #ca,0,n-1: PRINT #ca,otro$
+470     camino$(tp,n)=otro$
+480   END IF 
+490 END REPeat carrera
+500 AT #ca,v,h: PRINT #ca,"*";
+510 AT #ca,0,0: PRINT #ca,"Crash!"
+520 CSIZE #ca,0,0: CLOSE #ca

@@ -1,0 +1,2 @@
+10 LET a$="trwagmyfpdxbnjzsqvhlcket"
+20 INPUT "D.N.I.:  ";b$:PRINT "N.I.F=";b$&a$(1+b$-23*INT(b$/23))

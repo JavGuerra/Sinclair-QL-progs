@@ -1,0 +1,17 @@
+100 REMark graficos de tortuga
+110 PAPER 0
+120 CLS:CLS #0
+130 PENDOWN
+140 REPeat logo
+150 IF RND>.68 THEN CLS
+160 nota=RND
+170 POINT 80,50
+180 INK RND(1 TO 7)
+190 tortuga=RND(3 TO 70)
+200 galapago=RND(25 TO 340)
+210 FOR k=1 TO tortuga
+220 MOVE k/.7
+230 TURN galapago
+240 BEEP 32000,k/nota
+250 END FOR k
+260 END REPeat logo

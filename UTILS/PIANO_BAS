@@ -1,0 +1,115 @@
+100 CLEAR:aika=DATE:bon=-1
+110 p_varilogo "PIANO","21.10.85"
+120 :
+130 n=13
+140 DIM kork(2*n)
+150 REMark C C#  D   D#  EF   F#
+160 DATA 77 ,72, 67 ,63, 59 , 55 ,51
+170 REMark G G#  A   A#  BC
+180 DATA 47 ,44, 41 ,38, 35 , 33
+190 DATA 33 ,31, 28 ,26, 24 , 22 ,20
+200 DATA 18 ,17, 15 ,14, 12 , 11
+210 :
+220 DIM nuotti$(2*n,2)
+230 DATA "C C#D D#E F F#G G#A A#B C "
+240 :
+250 FOR i=1 TO 2*n:READ kork(i)
+260 READ a$
+270 FOR i=1 TO n
+280  nuotti$(i)=a$(2*i-1 TO 2*i)
+290  nuotti$(n+i)=a$(2*i-1 TO 2*i)
+300 END FOR i
+310 :
+320 vari=7:kesto=5000
+330 CLS:INK vari
+340 PRINT"Esc to end, tab ";"for new color"
+350 PRINT"Change duration 4 ja 5"
+360 PRINT"Play: Two lowest ";"keyboard rows"
+370 PRINT"Octaves: 1 2";" "
+380 :
+390 okt = 1
+400 lask=0
+410 key$="zsxdcvgbhnjm,12"
+420 REPeat soita
+430  c$=INKEY$:IF c$="":GO TO 430
+440  c=CODE(c$)
+450  IF c=27:EXIT soita
+460  IF c= 9:p_vari:REMark 2000
+470  IF c=52:kesto=-1
+480  IF c=53:kesto=5000
+490  c=c$ INSTR key$
+500  IF c=0 THEN GO TO 430
+510  IF c>n:okt=key$(c):GO TO 430
+520  k = (okt-1)*n+c
+530  BEEP
+540  IF bon:BEEP kesto,kork(k)
+550  lask=lask+1
+560  PRINT nuotti$(k);" ";
+570  IF lask >=12 THEN
+580   PRINT
+590   lask=0
+600  END IF
+610 END REPeat soita
+620 BEEP
+630 :
+640 p_valmis 0
+650 STOP
+660 :
+2000 DEFine PROCedure p_vari
+2010  SELect ON vari
+2020   =7:vari=2
+2030   =2:vari=4
+2040   =4:vari=6
+2050   =6:vari=5
+2060   =5:vari=7
+2070  END SELect
+2080  INK vari
+2090 END DEFine p_vari
+2100 :
+20000 DEFine PROCedure p_varilogo(ohj$,tpvm$):REMark 09.09.85
+20010  LOCal pv$,vsi,v$,i,j,k,k$
+20020  MODE 256
+20030  OPEN#3,scr_513x256a0x0:PAPER#3,1:CLS#3:CLOSE#3
+20040  WINDOW#1,448,200,32,16
+20050  PAPER#1,0:INK#1,4:CLS#1
+20060  CSIZE 3,1:CURSOR 224-8*10,70
+20070  PRINT "Timo Salmi":INK 7
+20080  CURSOR 224-8*LEN(ohj$),110
+20090  FOR i=1 TO LEN(ohj$)
+20100   k=0:INK 3
+20110   k$="AEIOSTNHJKLMPRUVYŽDWXQZBCFG”"
+20120   FOR j=1 TO LEN(k$):IF ohj$(i)=k$(j):k=-1:GO TO 20130
+20130   IF k THEN INK 6
+20140   PRINT ohj$(i);:INK 3
+20150  END FOR i
+20160  CSIZE 2,0
+20170  CURSOR 222-6*LEN(tpvm$),90
+20180  INK 1:PRINT tpvm$:INK 5
+20190  pv$=DATE$:vsi=pv$(1 TO 4)
+20200  AT 0,0:PRINT DAY$!DATE$
+20210  INK 2:AT 19,0:INPUT("CONTINUE: PRESS ENTER?")!v$:INK 7
+20220 END DEFine p_varilogo
+20230 :
+30000 DEFine PROCedure p_valmis (ch)
+30010  REMark 13.09.85
+30020  LOCal t,m,s:INK 7:FLASH 0
+30030  PRINT#ch:PRINT#ch,"READY, elapsed";
+30040  s=DATE-aika
+30050  t=INT(s/3600):s=s-t*3600
+30060  m=INT(s/60):s=s-60*m
+30070  IF t>0 THEN PRINT#ch,!t!"h";
+30080  IF m>0 THEN PRINT#ch,!m!"min";
+30090  PRINT#ch,!s!"sec"
+30100 END DEFine p_valmis
+30110 :
+31990 STOP
+32000 resave 1:STOP
+32010 resave 2:STOP
+32020 DEFine PROCedure resave (dr)
+32030  LOCal a$:a$="piano"
+32040  IF dr=1:a$="ram1_"&a$
+32050  IF dr=2:a$="ram2_"&a$
+32060  DELETE a$:SAVE a$
+32070  PRINT#0,"Saved"!a$
+32080 END DEFine
+
