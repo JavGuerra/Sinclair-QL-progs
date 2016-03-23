@@ -1,0 +1,31 @@
+100 REMark programa de volcado raw
+110 REMark Javier Guerra 2004
+120 :
+130 fic$="ejemplo" : REMark fichero
+140 dis$="win1_"   : REMark unidad
+150 modo=8 : REMark 8 - 4
+160 c_fi=5 : REMark canal fichero
+170 c_pa=6 : REMark canal pantalla
+180 :
+190 MODE modo
+200 IF modo=8 THEN 
+210     linea=255 : valor=1.475
+220   ELSE 
+230     linea=511 : valor=.7375
+240 END IF 
+250 OPEN  #c_pa,scr_512x256a0x0
+260 SCALE #c_pa,255,0,0
+270 PAPER #c_pa,7 : CLS #c_pa
+280 OPEN_IN #c_fi,dis$&fic$&"_raw"
+290 FOR y=255 TO 0 STEP -1
+300   FOR x=0 TO linea
+310     color=CODE(INKEY$(#c_fi))
+320     INK #c_pa,color
+330     POINT #c_pa,x*valor,y
+340   END FOR x
+350 END FOR y
+360 CLOSE #c_fi : CLOSE #c_pa
+370 :
+380 PAUSE
+390 REMark SBYTES dis$&fic$&"_scr",131072,32768
+400 PRINT #0,"OK"
