@@ -18,6 +18,6 @@
 
 * **[SINCLAIRQL_BAS](SINCLAIRQL_BAS)**: Dibuja el teclado del QL en pantalla.
 
-* **[STUNEL_BAS](STUNEL_BAS)**: Tunel espacial. Pantalla gráfica realizada con comandos. copiado de QL World.
+* **[STUNEL_BAS](STUNEL_BAS)**: Tunel espacial. Pantalla gráfica realizada con comandos. Copiado de QL World.
 
 [Volver](../README.md)
