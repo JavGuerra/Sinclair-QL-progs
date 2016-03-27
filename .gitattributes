@@ -1,4 +1,4 @@
 *.rom binary
 *_bas linguist-language=BASIC
-*.rtf diff=astextplain
+
 
