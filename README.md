@@ -1,7 +1,7 @@
-# Sinclair QL other programs
+# Sinclair QL programs
 JavGuerra mini programs for the [Sinclair QL](https://en.wikipedia.org/wiki/Sinclair_QL "Sinclair QL info") retro-computer
 
-# Sinclair QL otros programas
+# Programas Sinclair QL
 Mini programas para el Sinclair QL 
 
 ## Contenido
