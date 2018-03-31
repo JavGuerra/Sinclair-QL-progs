@@ -1,5 +1,5 @@
 # Sinclair QL programs
-JavGuerra mini programs for the [Sinclair QL](https://en.wikipedia.org/wiki/Sinclair_QL "Sinclair QL info") retro-computer
+JavGuerra's mini programs for the [Sinclair QL](https://en.wikipedia.org/wiki/Sinclair_QL "Sinclair QL info") retro-computer
 
 # Programas Sinclair QL
 Mini programas para el Sinclair QL 
