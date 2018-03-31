@@ -12,4 +12,12 @@ Este repositorio contiene:
 * GAMES: [Pequeños juegos](GAMES/README.md)
 * UTILS: [Utilidades básicas](UTILS/README.md)
 
-Visita: [SinclairQL.es](http://sinclairql.es "Sinclair QL Recursos en Castellano") para más información y recursos en castellano.
+## También en GitHub
+
+* [Sinclair QL utils](https://github.com/JavGuerra/Sinclair-QL-utils)
+* [Sinclair QL Menú](https://github.com/JavGuerra/Sinclair-QL-menu)
+
+### Visita
+[SinclairQL.es](http://sinclairql.es "Sinclair QL Recursos en Castellano") para más información y recursos en castellano.
+
+
